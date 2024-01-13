@@ -11,13 +11,16 @@ ul {
     display: flex;
     flex-wrap: wrap;
     gap: 24px;
-    justify-content: space-between;
     padding: 24px 156px;
+    /* width: 1440px; */
+    width: auto;
+    height: 696px;
+    justify-content: center;
 }
 
 .gallery li {
     flex-grow: 0;
-    flex-basis: calc(33.33% - 16px);
+    /* flex-basis: calc(33.33% - 16px); */
     width: 360px;
     height: auto;
     flex-shrink: 0;
