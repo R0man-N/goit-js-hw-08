@@ -64,21 +64,21 @@ const images = [
   },
 ];
 
-const galleryContainer = document.querySelector('.gallery');
+const galleryContainer = document.querySelector(".gallery");
 
 const createGalleryItem = ({ preview, original, description }) => {
-  const galleryItem = document.createElement('li');
-  galleryItem.classList.add('gallery-item');
+  const galleryItem = document.createElement("li");
+  galleryItem.classList.add("gallery-item");
 
-  const galleryLink = document.createElement('a');
-  galleryLink.classList.add('gallery-link');
+  const galleryLink = document.createElement("a");
+  galleryLink.classList.add("gallery-link");
   galleryLink.href = original;
 
-  const galleryImage = document.createElement('img');
-  galleryImage.classList.add('gallery-image');
+  const galleryImage = document.createElement("img");
+  galleryImage.classList.add("gallery-image");
   galleryImage.src = preview;
   galleryImage.alt = description;
-  galleryImage.setAttribute('data-source', original);
+  galleryImage.setAttribute("data-source", original);
 
   galleryLink.appendChild(galleryImage);
   galleryItem.appendChild(galleryLink);
@@ -88,7 +88,7 @@ const createGalleryItem = ({ preview, original, description }) => {
 
 const appendGalleryItems = () => {
   const galleryFragment = document.createDocumentFragment();
-  images.forEach(image => {
+  images.forEach((image) => {
     const galleryItem = createGalleryItem(image);
     galleryFragment.appendChild(galleryItem);
   });
@@ -99,47 +99,44 @@ appendGalleryItems();
 
 // =========== Modal window ===========
 
-// Додамо код для відкриття та закриття модального вікна
 let activeLightbox = null;
 
-galleryContainer.addEventListener('click', (event) => {
+galleryContainer.addEventListener("click", (event) => {
   event.preventDefault();
 
   const target = event.target;
-  const galleryItem = target.closest('.gallery-item');
+  const galleryItem = target.closest(".gallery-item");
 
   if (!galleryItem) {
     return;
   }
 
-  const originalImageURL = galleryItem.querySelector('.gallery-image').dataset.source;
+  const originalImageURL =
+    galleryItem.querySelector(".gallery-image").dataset.source;
 
-  // Створюємо lightbox instance з великим зображенням
+  // Lightbox instance with BIG image
   const lightboxContent = `
     <img src="${originalImageURL}" alt="Image" />
   `;
 
   const lightboxOptions = {
     onShow: () => {
-      // Відключаємо прослуховування клавіші Escape при відкритті модального вікна
-      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener("keydown", handleKeyDown);
     },
     onClose: () => {
-      // Включаємо прослуховування клавіші Escape при закритті модального вікна
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     },
   };
 
   activeLightbox = basicLightbox.create(lightboxContent, lightboxOptions);
 
-  // Відкриваємо модальне вікно
+  // Open modal window
   activeLightbox.show();
 });
 
-// Функція для закриття модального вікна при натисканні клавіші Escape
+// To close a modal window when the Escape key is pressed
 const handleKeyDown = (event) => {
-  if (event.key === 'Escape' && activeLightbox) {
+  if (event.key === "Escape" && activeLightbox) {
     activeLightbox.close();
   }
 };
-
