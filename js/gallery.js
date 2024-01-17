@@ -66,33 +66,17 @@ const images = [
 
 const galleryContainer = document.querySelector(".gallery");
 
-const createGalleryItem = ({ preview, original, description }) => {
-  const galleryItem = document.createElement("li");
-  galleryItem.classList.add("gallery-item");
-
-  const galleryLink = document.createElement("a");
-  galleryLink.classList.add("gallery-link");
-  galleryLink.href = original;
-
-  const galleryImage = document.createElement("img");
-  galleryImage.classList.add("gallery-image");
-  galleryImage.src = preview;
-  galleryImage.alt = description;
-  galleryImage.setAttribute("data-source", original);
-
-  galleryLink.appendChild(galleryImage);
-  galleryItem.appendChild(galleryLink);
-
-  return galleryItem;
-};
+const createGalleryItemWithTemplate = ({ preview, original, description }) => `
+  <li class="gallery-item">
+    <a class="gallery-link" href="${original}">
+      <img class="gallery-image" src="${preview}" alt="${description}" data-source="${original}">
+    </a>
+  </li>
+`;
 
 const appendGalleryItems = () => {
-  const galleryFragment = document.createDocumentFragment();
-  images.forEach((image) => {
-    const galleryItem = createGalleryItem(image);
-    galleryFragment.appendChild(galleryItem);
-  });
-  galleryContainer.appendChild(galleryFragment);
+  const galleryHTML = images.map(createGalleryItemWithTemplate).join("");
+  galleryContainer.innerHTML = galleryHTML;
 };
 
 appendGalleryItems();
@@ -105,19 +89,21 @@ galleryContainer.addEventListener("click", (event) => {
   event.preventDefault();
 
   const target = event.target;
-  const galleryItem = target.closest(".gallery-item");
 
-  if (!galleryItem) {
+  if (target.nodeName !== "IMG") {
     return;
   }
 
-  const originalImageURL =
-    galleryItem.querySelector(".gallery-image").dataset.source;
+  const originalImageURL = target.dataset.source;
+  const altText = target.alt;
 
-  // Lightbox instance with BIG image
+  if (!originalImageURL) {
+    return;
+  }
+
   const lightboxContent = `
-    <img src="${originalImageURL}" alt="Image" />
-  `;
+  <img src="${originalImageURL}" alt="${altText}" />
+`;
 
   const lightboxOptions = {
     onShow: () => {
@@ -136,7 +122,7 @@ galleryContainer.addEventListener("click", (event) => {
 
 // To close a modal window when the Escape key is pressed
 const handleKeyDown = (event) => {
-  if (event.key === "Escape" && activeLightbox) {
+  if (event.code === "Escape") {
     activeLightbox.close();
   }
 };
